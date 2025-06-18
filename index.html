@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ВИТАЛИЙ - Система бронирования квартир</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ECF2FE;
+            color: #333;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header-block {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: -10px;
+        }
+        .header-block h1,
+        .header-block h2 {
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+        .header-block h1 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .header-block h2 {
+            font-size: 1.4em;
+            color: #4F4F4F;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 1em;
+            color: #333;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        h2 {
+            font-size: 0.7em;
+            color: #aaa;
+            margin-top: 0;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="date"] {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            color: #333;
+            font-size: 16px;
+        }
+        .row {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .btn {
+            background-color: #6994F1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .result {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        #generatedLink {
+            width: 50%;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #333;
+            min-height: 50px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .dropdown {
+            position: absolute;
+            width: calc(100% - 22px);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            z-index: 100;
+            max-height: 300px;
+            overflow: hidden;
+            margin-top: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .dropdown-search {
+            padding: 8px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+        }
+        .dropdown-scroll {
+            max-height: 240px;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        .dropdown-item {
+            padding: 8px;
+            cursor: pointer;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        .dropdown-item:hover {
+            background-color: #B2CBF6;
+        }
+        .dropdown-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .dropdown-scroll::-webkit-scrollbar-track {
+            background: #f0f0f0;
+        }
+        .dropdown-scroll::-webkit-scrollbar-thumb {
+            background: #6994F1;
+        }
+        .dropdown-scroll::-webkit-scrollbar-thumb:hover {
+            background: #7aa5f5;
+        }
+        .invalid-date {
+            border-color: red !important;
+        }
+        .copy-success {
+            background-color: #4caf50 !important;
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-block">
+        <h1>Система бронирования квартир</h1>
+        <h2>Менеджер: ВИТАЛИЙ</h2>
+    </div>
+    <div class="container">
+        <div class="form-group">
+            <label for="address">Адрес квартиры:</label>
+            <div style="position:relative;">
+                <input type="text" id="addressInput" placeholder="Выберите адрес..." readonly>
+                <div class="dropdown" id="addressDropdown" style="display:none;">
+                    <div class="dropdown-search">
+                        <input type="text" id="addressSearch" placeholder="Поиск..." style="width:100%; padding:6px;">
+                    </div>
+                    <div class="dropdown-scroll" id="addressOptions">
+                        
+                            <div class="dropdown-item" 
+                                 data-value="biberev251-3" 
+                                 data-code="1893">
+                                ул. Бибиревская 4А, кв. 251, студия 3
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="biberev251-4" 
+                                 data-code="0372">
+                                ул. Бибиревская 4А, кв. 251, студия 4
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="biberev251-5" 
+                                 data-code="1219">
+                                ул. Бибиревская 4А, кв. 251, студия 5
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="biberev92-1" 
+                                 data-code="7253">
+                                ул. Бибиревская 4А, кв. 92, студия 1
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="biberev92-2" 
+                                 data-code="0477">
+                                ул. Бибиревская 4А, кв. 92, студия 2
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="volgograd205-1" 
+                                 data-code="8887">
+                                ул. Волгоградский проспект 32/5к1, кв. 205Б, студия 1 (слева)
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="volgograd205-2" 
+                                 data-code="7888">
+                                ул. Волгоградский проспект 32/5к1, кв. 205Б, студия 2 (справа)
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="volgograd62-1" 
+                                 data-code="7888">
+                                ул. Волгоградский проспект 32/3к3, кв. 62, студия 1
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="volgograd62-2" 
+                                 data-code="8887">
+                                ул. Волгоградский проспект 32/3к3, кв. 62, студия 2
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="volgograd707-1" 
+                                 data-code="7888">
+                                ул. Волгоградский проспект 32/5к1, кв. 707Б, студия 1
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="volgograd707-2" 
+                                 data-code="8887">
+                                ул. Волгоградский проспект 32/5к1, кв. 707Б, студия 2
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="nizhnyaya1" 
+                                 data-code="ХХХХ">
+                                ул. Нижняя 7, кв. 1
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="dmitr515-1" 
+                                 data-code="ХХХХ">
+                                ул. Дмитровское шоссе 81, кв. 515, студия 1 (слева)
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="dmitr515-2" 
+                                 data-code="ХХХХ">
+                                ул. Дмитровское шоссе 81, кв. 515, студия 2 (центр)
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="dmitr515-3" 
+                                 data-code="ХХХХ">
+                                ул. Дмитровское шоссе 81, кв. 515, студия 3 (справа)
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="dmitr706-1" 
+                                 data-code="ХХХХ">
+                                ул. Дмитровское шоссе 81, кв. 706А, студия 1
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="dmitr709-1" 
+                                 data-code="7007">
+                                ул. Дмитровское шоссе 81, кв. 709, студия 1
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="dmitr709-2" 
+                                 data-code="7070">
+                                ул. Дмитровское шоссе 81, кв. 709, студия 2
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="dmitr709-3" 
+                                 data-code="1710">
+                                ул. Дмитровское шоссе 81, кв. 709, студия 3
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="dmitr709-4" 
+                                 data-code="7079">
+                                ул. Дмитровское шоссе 81, кв. 709, студия 4
+                            </div>
+                        
+                            <div class="dropdown-item" 
+                                 data-value="dmitr709-5" 
+                                 data-code="2508">
+                                ул. Дмитровское шоссе 81, кв. 709, студия 5
+                            </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div>
+                <label for="checkin">Дата заезда:</label>
+                <input type="date" id="checkin">
+            </div>
+            <div>
+                <label for="checkout">Дата выезда:</label>
+                <input type="date" id="checkout">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="code">Код ключницы:</label>
+            <input type="text" id="code" value=""> <!-- removed readonly -->
+        </div>
+        <div class="form-group">
+            <div class="result">
+                <textarea id="generatedLink" readonly rows="3"></textarea>
+                <button class="btn copy-btn" id="copyBtn">Скопировать ссылку</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentAddress = '';
+        let currentCode = '';
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+        function isValidDate(dateString) {
+            const date = new Date(dateString);
+            return date >= today && !isNaN(date);
+        }
+        function updateLink() {
+            const address = document.getElementById('addressInput').value;
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+            const code = document.getElementById('code').value;
+            const checkinInput = document.getElementById('checkin');
+            const checkoutInput = document.getElementById('checkout');
+            // Проверка дат
+            const isCheckinValid = isValidDate(checkin);
+            const isCheckoutValid = isValidDate(checkout);
+            checkinInput.classList.toggle('invalid-date', !isCheckinValid);
+            checkoutInput.classList.toggle('invalid-date', !isCheckoutValid);
+            if (!address || !isCheckinValid || !isCheckoutValid) {
+                document.getElementById('generatedLink').value = '';
+                return;
+            }
+            const formatDate = (dateString) => {
+                const [year, month, day] = dateString.split('-');
+                return `${day}.${month}.${year}`;
+            };
+            const formattedCheckin = formatDate(checkin);
+            const formattedCheckout = formatDate(checkout);
+            let link = `https://sbsite.pro//${currentAddress}_1?datein=${formattedCheckin}&dateout=${formattedCheckout}`;
+            if (code && code !== 'Ключницы нет') {
+                link += `&code=${code}`;
+            }
+            document.getElementById('generatedLink').value = link;
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('checkin').min = todayStr;
+            document.getElementById('checkout').min = todayStr;
+            document.getElementById('checkin').addEventListener('change', function () {
+                const checkout = document.getElementById('checkout');
+                checkout.min = this.value;
+                if (checkout.value < this.value) {
+                    checkout.value = '';
+                }
+                updateLink();
+            });
+            document.getElementById('checkout').addEventListener('change', updateLink);
+
+            // Обработка изменения кода вручную
+            document.getElementById('code').addEventListener('input', updateLink);
+
+            const addressInput = document.getElementById('addressInput');
+            const dropdown = document.getElementById('addressDropdown');
+            const options = document.querySelectorAll('.dropdown-item');
+            const addressSearch = document.getElementById('addressSearch');
+
+            addressInput.addEventListener('click', () => {
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            });
+
+            addressSearch.addEventListener('input', function () {
+                const query = this.value.toLowerCase();
+                options.forEach(option => {
+                    option.style.display = option.textContent.toLowerCase().includes(query) ? 'block' : 'none';
+                });
+            });
+
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    currentAddress = option.getAttribute('data-value');
+                    currentCode = option.getAttribute('data-code');
+                    addressInput.value = option.textContent.trim();
+                    dropdown.style.display = 'none';
+                    const codeInput = document.getElementById('code');
+                    if (currentCode) {
+                        codeInput.value = currentCode;
+                    } else {
+                        codeInput.value = 'Ключницы нет';
+                    }
+                    updateLink();
+                });
+            });
+
+            document.getElementById('copyBtn').addEventListener('click', function () {
+                const linkInput = document.getElementById('generatedLink');
+                if (!linkInput.value) {
+                    alert('Сначала заполните все поля!');
+                    return;
+                }
+                linkInput.select();
+                document.execCommand('copy');
+                this.textContent = 'Ссылка скопирована!';
+                this.classList.add('copy-success');
+                setTimeout(() => {
+                    this.textContent = 'Скопировать ссылку';
+                    this.classList.remove('copy-success');
+                }, 10000);
+                // Очистка формы
+                addressInput.value = '';
+                document.getElementById('checkin').value = '';
+                document.getElementById('checkout').value = '';
+                document.getElementById('code').value = '';
+                document.getElementById('generatedLink').value = '';
+                addressSearch.value = ''; // Очищаем поле поиска
+                // Сбрасываем список до полного
+                options.forEach(opt => {
+                    opt.style.display = 'block';
+                });
+                currentAddress = '';
+                currentCode = '';
+                dropdown.style.display = 'none'; // Скрываем выпадающий список
+            });
+        });
+    </script>
+</body>
+</html>
