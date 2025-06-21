@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Виталий - Система заселения гостей</title>
-    <style>
+       <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #ECF2FE;
@@ -318,6 +318,13 @@
             <input type="text" id="code" value=""> <!-- removed readonly -->
         </div>
         <div class="form-group">
+            <label for="surcharge">Доплата:</label>
+            <input type="text" id="surcharge" value="0"
+                   onfocus="if(this.value==='0') this.value=''"
+                   onblur="if(this.value==='') this.value='0'"
+                   oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        </div>
+        <div class="form-group">
             <div class="result">
                 <textarea id="generatedLink" readonly rows="3"></textarea>
                 <button class="btn copy-btn" id="copyBtn">Скопировать ссылку</button>
@@ -327,44 +334,56 @@
     <script>
         let currentAddress = '';
         let currentCode = '';
+        let currentSurcharge = '0';
         let today = new Date();
         today.setHours(0, 0, 0, 0);
+
         function isValidDate(dateString) {
             const date = new Date(dateString);
             return date >= today && !isNaN(date);
         }
+
         function updateLink() {
             const address = document.getElementById('addressInput').value;
             const checkin = document.getElementById('checkin').value;
             const checkout = document.getElementById('checkout').value;
             const code = document.getElementById('code').value;
+            const surcharge = document.getElementById('surcharge').value;
             const checkinInput = document.getElementById('checkin');
             const checkoutInput = document.getElementById('checkout');
-            // Проверка дат
+
             const isCheckinValid = isValidDate(checkin);
             const isCheckoutValid = isValidDate(checkout);
             checkinInput.classList.toggle('invalid-date', !isCheckinValid);
             checkoutInput.classList.toggle('invalid-date', !isCheckoutValid);
+
             if (!address || !isCheckinValid || !isCheckoutValid) {
                 document.getElementById('generatedLink').value = '';
                 return;
             }
+
             const formatDate = (dateString) => {
                 const [year, month, day] = dateString.split('-');
                 return `${day}.${month}.${year}`;
             };
+
             const formattedCheckin = formatDate(checkin);
             const formattedCheckout = formatDate(checkout);
-            let link = `https://sbsite.pro//${currentAddress}_1?datein=${formattedCheckin}&dateout=${formattedCheckout}`;
+
+            let link = `https://sbsite.pro//${currentAddress}_1?datein=${formattedCheckin}&s=${surcharge}&dateout=${formattedCheckout}`;
+
             if (code && code !== 'Ключницы нет') {
                 link += `&code=${code}`;
             }
+
             document.getElementById('generatedLink').value = link;
         }
+
         document.addEventListener('DOMContentLoaded', function () {
             const todayStr = new Date().toISOString().split('T')[0];
             document.getElementById('checkin').min = todayStr;
             document.getElementById('checkout').min = todayStr;
+
             document.getElementById('checkin').addEventListener('change', function () {
                 const checkout = document.getElementById('checkout');
                 checkout.min = this.value;
@@ -373,10 +392,10 @@
                 }
                 updateLink();
             });
-            document.getElementById('checkout').addEventListener('change', updateLink);
 
-            // Обработка изменения кода вручную
+            document.getElementById('checkout').addEventListener('change', updateLink);
             document.getElementById('code').addEventListener('input', updateLink);
+            document.getElementById('surcharge').addEventListener('input', updateLink);
 
             const addressInput = document.getElementById('addressInput');
             const dropdown = document.getElementById('addressDropdown');
@@ -400,12 +419,14 @@
                     currentCode = option.getAttribute('data-code');
                     addressInput.value = option.textContent.trim();
                     dropdown.style.display = 'none';
+
                     const codeInput = document.getElementById('code');
                     if (currentCode) {
                         codeInput.value = currentCode;
                     } else {
                         codeInput.value = 'Ключницы нет';
                     }
+
                     updateLink();
                 });
             });
@@ -416,28 +437,35 @@
                     alert('Сначала заполните все поля!');
                     return;
                 }
+
                 linkInput.select();
                 document.execCommand('copy');
+
                 this.textContent = 'Ссылка скопирована!';
                 this.classList.add('copy-success');
+
                 setTimeout(() => {
                     this.textContent = 'Скопировать ссылку';
                     this.classList.remove('copy-success');
                 }, 10000);
+
                 // Очистка формы
                 addressInput.value = '';
                 document.getElementById('checkin').value = '';
                 document.getElementById('checkout').value = '';
                 document.getElementById('code').value = '';
+                document.getElementById('surcharge').value = '0';
                 document.getElementById('generatedLink').value = '';
                 addressSearch.value = ''; // Очищаем поле поиска
-                // Сбрасываем список до полного
+
                 options.forEach(opt => {
                     opt.style.display = 'block';
                 });
+
                 currentAddress = '';
                 currentCode = '';
-                dropdown.style.display = 'none'; // Скрываем выпадающий список
+                currentSurcharge = '';
+                dropdown.style.display = 'none';
             });
         });
     </script>
