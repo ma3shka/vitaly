@@ -370,7 +370,11 @@
             const formattedCheckin = formatDate(checkin);
             const formattedCheckout = formatDate(checkout);
 
-            let link = `https://sbsite.pro//${currentAddress}_1?datein=${formattedCheckin}&s=${surcharge}&dateout=${formattedCheckout}`;
+            let link = `Здравствуйте! Это Виталий из УК Ма-Трёшка, я ваш персональный менеджер. У вас забронировано проживание с ${formattedCheckin} до ${formattedCheckout}. 
+
+Инструкция по заселению, правила проживания и прочие детали автоматически придут вам в нашем телеграм-боте. Если будут какие-либо вопросы/пожелания, пишите прямо сюда! 
+
+Запуск телеграм-бота по ссылке: https://sbsite.pro//${currentAddress}_1?datein=${formattedCheckin}&s=${surcharge}&dateout=${formattedCheckout}`;
 
             if (code && code !== 'Ключницы нет') {
                 link += `&code=${code}`;
