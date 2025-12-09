@@ -472,15 +472,20 @@
             const formattedCheckin = formatDate(checkin);
             const formattedCheckout = formatDate(checkout);
 
+            const url = new URL(`https://sbsite.pro/${currentAddress}_1`);
+            url.searchParams.set('datein', formattedCheckin);
+            url.searchParams.set('dateout', formattedCheckout);
+            url.searchParams.set('s', surcharge);
+
+            if (code && code !== 'Ключницы нет') {
+                url.searchParams.set('code', code);
+            }
+
             let link = `Здравствуйте! Это Виталий из УК Ма-Трёшка, я Ваш персональный менеджер. У Вас забронировано проживание с ${formattedCheckin} до ${formattedCheckout}. 
 
 Инструкция по заселению, правила проживания и прочие детали автоматически придут Вам в нашем телеграм-боте. Если будут какие-либо вопросы/пожелания, пишите прямо сюда! 
 
-Запуск телеграм-бота по ссылке: https://sbsite.pro//${currentAddress}_1?datein=${formattedCheckin}&s=${surcharge}&dateout=${formattedCheckout}`;
-
-            if (code && code !== 'Ключницы нет') {
-                link += `&code=${code}`;
-            }
+Запуск телеграм-бота по ссылке: ${url.href}`;
 
             document.getElementById('generatedLink').value = link;
         }
